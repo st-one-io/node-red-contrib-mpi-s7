@@ -1,0 +1,172 @@
+<!--
+  Copyright: (c) 2020, ST-One Ltda., Guilherme Francescon Cittolin <guilherme@st-one.io>
+  GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
+-->
+
+<script type="text/x-red" data-template-name="mpi-s7 adapter">
+	<div class="form-row">
+		<label for="node-config-input-adapter"><i class="fa fa-random"></i> <span data-i18n="mpi-s7.adapter.label.adapter"></span></label>
+		<input type="text" id="node-config-input-adapter" data-i18n="[placeholder]mpi-s7.adapter.placeholder.adapter" style="width:66%;">
+		<a id="node-config-lookup-adapter" class="btn red-ui-button"><i class="fa fa-search"></i></a>
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-busconfigmode"><i class="fa fa-map-signs"></i> <span data-i18n="mpi-s7.adapter.label.busmode.mode"></span></label>
+		<select type="text" id="node-config-input-busconfigmode">
+			<option value="s7-300/400" data-i18n="mpi-s7.adapter.label.busmode.s7-300"></option>
+			<option value="s7-200" data-i18n="mpi-s7.adapter.label.busmode.s7-200"></option>
+			<option value="expert" data-i18n="mpi-s7.adapter.label.busmode.expert"></option>
+		</select>
+	</div>
+	<div id="mpi-s7-endpoint-bus-params-simple">
+		<div class="form-row">
+			<label for="node-config-input-busaddr"><i class="fa fa-sitemap"></i> <span data-i18n="mpi-s7.adapter.label.busaddr"></span></label>
+			<input type="text" id="node-config-input-busaddr" data-i18n="[placeholder]mpi-s7.adapter.label.busaddr" style="width: 60px;">
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-maxbusaddr"><i class="fa fa-expand"></i> <span data-i18n="mpi-s7.adapter.label.maxbusaddr"></span></label>
+			<input type="text" id="node-config-input-maxbusaddr" data-i18n="[placeholder]mpi-s7.adapter.label.maxbusaddr" style="width: 60px;">
+		</div>
+		<div class="form-row">
+			<label for="node-config-input-busspeed"><i class="fa fa-tachometer"></i> <span data-i18n="mpi-s7.adapter.label.busspeed"></span></label>
+			<select type="text" id="node-config-input-busspeed">
+				<option value="BAUD_AUTO">Auto</option>
+				<option value="BAUD_9k6">9.6 kbps</option>
+				<option value="BAUD_19k2">19.2 kbps</option>
+				<option value="BAUD_45k45">45.45 kbps</option>
+				<option value="BAUD_93k75">93.75 kbps</option>
+				<option value="BAUD_187k5">187.5 kbps</option>
+				<option value="BAUD_500k">500 kbps</option>
+				<option value="BAUD_1M5">1.5 Mbps</option>
+			</select>
+		</div>
+	</div>
+	<div id="mpi-s7-endpoint-bus-params-expert" style="display: none">
+		<div class="form-row">
+			<label for="node-config-input-busparams"><span data-i18n="mpi-s7.adapter.label.busparams"></span></label>
+			<textarea id="node-config-input-busparams" style="width: 70%"></textarea>
+		</div>
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-timeout"><i class="fa fa-clock-o"></i> <span data-i18n="mpi-s7.adapter.label.timeout"></span></label>
+		<input type="text" id="node-config-input-timeout" data-i18n="[placeholder]mpi-s7.adapter.label.timeout" style="width: 60px;"> <span>ms</span>
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="mpi-s7.adapter.label.name"></span></label>
+		<input type="text" id="node-config-input-name" data-i18n="[placeholder]mpi-s7.adapter.label.name">
+	</div>
+</script>
+
+<script type="text/x-red" data-help-name="mpi-s7 adapter">
+	<p>Configures the connection to an MPI/PPI/DP</p>
+	<p>This node was created as part of the <a href="https://st-one.io" target="_blank">ST-One</a> project</p>
+
+	<h3>Details</h3>
+	<p>
+		<i>Work in progress!</i>
+	</p>
+</script>
+
+<script type="text/javascript">
+
+	RED.nodes.registerType('mpi-s7 adapter', {
+		category: 'config',
+		defaults: {
+			name: {
+				value: ""
+			},
+			timeout: {
+				value: 10000,
+				validate: RED.validators.number()
+			},
+			adapter: {
+				value: ""
+			},
+			busconfigmode: {
+				value: "s7-300/400"
+			},
+			busaddr: {
+				value: 0,
+				validate: RED.validators.number()
+			},
+			maxbusaddr: {
+				value: 15,
+				validate: RED.validators.number()
+			},
+			busspeed: {
+				value: "BAUD_AUTO"
+			},
+			busparams: {
+				value: '',
+				validate: function (v) { try { v && JSON.parse(v) } catch (e) { return false; } return true; }
+			}
+		},
+		label: function () {
+			if (this.name) {
+				return this.name;
+			} else if (this.adapter) {
+				return "[" + this.adapter + "] @" + this.busaddr;
+			} else {
+				return "MPI/PPI/DP @" + this.busaddr;
+			}
+		},
+		oneditprepare: function () {
+			var self = this;
+
+			var inputAdapter = $('#node-config-input-adapter');
+			var inputBusConfigMode = $('#node-config-input-busconfigmode');
+			var inputBusAddr = $('#node-config-input-busaddr');
+			var inputMaxBusAddr = $('#node-config-input-maxbusaddr');
+			var inputTimeout = $('#node-config-input-timeout');
+
+			var sectionParamsSimple = $('#mpi-s7-endpoint-bus-params-simple');
+			var sectionParamsExpert = $('#mpi-s7-endpoint-bus-params-expert');
+
+			var btnAdapterLookup = $('#node-config-lookup-adapter');
+
+			inputBusAddr.spinner({ min: 0, max: 126 });
+			inputMaxBusAddr.spinner({ min: 1, max: 126 });
+			inputTimeout.spinner({ min: 0 });
+
+			if (this.busaddr === undefined){
+				inputBusAddr.val(0);
+			}
+
+			inputBusConfigMode.change(function() {
+				var curVal = inputBusConfigMode.val();
+				if (curVal == 'expert') {
+					sectionParamsSimple.hide();
+					sectionParamsExpert.show();
+				} else {
+					sectionParamsSimple.show();
+					sectionParamsExpert.hide();
+				}
+			});
+			inputBusConfigMode.change();
+
+			btnAdapterLookup.click(function() {
+				if (btnAdapterLookup.hasClass('disabled')) return;
+
+				btnAdapterLookup.addClass('disabled');
+				var iconLookup = btnAdapterLookup.children('i');
+				iconLookup.removeClass('fa-search').addClass('fa-spinner fa-spin fa-fw');
+
+				$.getJSON('__node-red-contrib-mpi-s7/available-adapters', function(data){
+					console.log("node-red-contrib-mpi-s7 discovered adapters", data);
+
+					inputAdapter.autocomplete({
+						source: data,
+						minLength: 0
+					});
+
+					inputAdapter.focus(function () {
+						inputAdapter.autocomplete("search", "")
+					});
+					inputAdapter.focus();
+				}).always(function () {
+					iconLookup.removeClass('fa-spinner fa-spin fa-fw').addClass('fa-search');
+					btnAdapterLookup.removeClass('disabled');
+				});
+			})
+		}
+	});
+</script>

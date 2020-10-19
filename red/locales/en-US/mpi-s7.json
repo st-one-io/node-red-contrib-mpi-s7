@@ -1,0 +1,29 @@
+{
+    "mpi-s7": {
+        "adapter": {
+            "label": {
+                "adapter": "Adapter",
+                "busaddr": "Bus Address",
+                "maxbusaddr": "Max. Bus Address",
+                "busspeed": "Bus Speed",
+                "busparams": "Bus Parameters",
+                "timeout": "Timeout",
+                "name": "Name",
+                "busmode": {
+                    "mode": "Mode",
+                    "s7-300": "S7-300/400",
+                    "s7-200": "S7-200",
+                    "expert": "Expert (experimental)"
+                }
+            },
+            "placeholder": {
+                "adapter": "Click the \"search\" button to select an adapter"
+            }
+        },
+        "error": {
+            "noadapter": "No adapter available",
+            "invalid-json-params": "Invalid JSON for bus parameters",
+            "invalid-bus-speed": "Invalid bus speed selected"
+        }
+    }
+}

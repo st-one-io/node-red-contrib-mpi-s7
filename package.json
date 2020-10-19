@@ -1,0 +1,34 @@
+{
+    "name": "node-red-contrib-mpi-s7",
+    "version": "1.0.0-alpha0",
+    "description": "Node-RED nodes to communicate with Siemens MPI/PPI/DP adapters",
+    "main": "index.js",
+    "dependencies": {
+        "mpi-s7": "^0.3.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/st-one-io/node-red-contrib-mpi-s7.git"
+    },
+    "bugs": {
+        "url": "https://github.com/st-one-io/node-red-contrib-mpi-s7/issues"
+    },
+    "keywords": [
+        "hardware",
+        "s7",
+        "siemens",
+        "plc",
+        "mpi",
+        "ppi",
+        "dp",
+        "profibus",
+        "node-red"
+    ],
+    "node-red": {
+        "nodes": {
+            "mpi-s7": "red/mpi-s7.js"
+        }
+    },
+    "author": "ST-One",
+    "license": "GPL-3.0-or-later"
+}
