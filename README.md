@@ -22,6 +22,6 @@ Please share your ideas and experiences on the [Node-RED forum](https://discours
 
 
 ## License
-Copyright: (c) 2020, ST-One, Guilherme Francescon Cittolin <guilherme@st-one.io>
+Copyright: (c) 2020-2021, ST-One, Guilherme Francescon Cittolin <guilherme@st-one.io>
 
 GNU General Public License v3.0+ (see [LICENSE](LICENSE) or https://www.gnu.org/licenses/gpl-3.0.txt)
