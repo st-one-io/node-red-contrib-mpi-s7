@@ -4,7 +4,7 @@
     "description": "Node-RED nodes to communicate with Siemens MPI/PPI/DP adapters",
     "main": "index.js",
     "dependencies": {
-        "mpi-s7": "^0.4.0"
+        "mpi-s7": "^0.4.1"
     },
     "repository": {
         "type": "git",
