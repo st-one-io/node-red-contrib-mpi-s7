@@ -9,7 +9,7 @@ const tools = require('../src/tools.js');
 module.exports = function (RED) {
     "use strict";
 
-    const { AdapterManager, BusSpeed, MpiAdapter } = require('mpi-s7');
+    const { AdapterManager, BusSpeed, MpiAdapter } = require('@protocols/mpi-s7');
     const { EventEmitter } = require('events');
 
     // Discovery Endpoints
@@ -28,7 +28,13 @@ module.exports = function (RED) {
      * @param {number} [selfBusAddress=0]
      * @param {BusSpeed} [busSpeed=BusSpeed.BAUD_AUTO]
      * @param {'s7-200'|'s7-300/400'} [plcType='s7-300/400']
-     * @param {import('mpi-s7/src/mpi/constants').BusParameters} [connectionParams]
+     * @param {import('@protocols/mpi-s7/src/mpi/constants').BusParameters} [connectionParams]
+     */
+
+    /**
+     * @typedef {object} NodeRedNode
+     * @property {(err: string, msg?: function) => void} error
+     * @property {(event: string, cb?: function) => void} on
      */
 
     /**
@@ -42,12 +48,14 @@ module.exports = function (RED) {
      * @param {string} config.maxbusaddr 
      * @param {string} config.busspeed 
      * @param {string} config.busparams 
+     * @this NodeRedNode
      */
     function MPIS7Adapter(config) {
         EventEmitter.call(this);
         const node = this;
 
         //avoids warnings when we have a lot of S7In nodes
+        //@ts-ignore
         this.setMaxListeners(0);
 
         RED.nodes.createNode(this, config);
@@ -57,13 +65,14 @@ module.exports = function (RED) {
         let currentAdapterPath = null;
         let closing = false;
 
-        /** @type {MpiAdapter} */
-        let adapter = null;
+        /** @type {MpiAdapter|undefined} */
+        let adapter = undefined;
         /** @type {ConnOpts} */
         let connOpts;
-        /** @type {NodeJS.Timeout} */
-        let adapterOpenTimer = null;
+        /** @type {NodeJS.Timeout|undefined} */
+        let adapterOpenTimer = undefined;
 
+        //@ts-expect-error
         node.getStream = async addr => {
             if (!adapter) throw new Error(RED._('mpi-s7.error.noadapter'));
             if (!adapter.connected) throw new Error(RED._('mpi-s7.error.adapter-not-connected'));
@@ -157,7 +166,7 @@ module.exports = function (RED) {
                     adapter.removeListener('close', scheduleReopen);
                     adapter.removeListener('disconnect', scheduleReopen);
                 }
-                adapter = null;
+                adapter = undefined;
                 currentAdapterPath = null;
             }
         }

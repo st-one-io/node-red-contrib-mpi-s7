@@ -4,7 +4,7 @@
   GNU General Public License v3.0+ (see LICENSE or https://www.gnu.org/licenses/gpl-3.0.txt)
 */
 
-const mpis7 = require('mpi-s7');
+const mpis7 = require('@protocols/mpi-s7');
 
 class Tools {
 
