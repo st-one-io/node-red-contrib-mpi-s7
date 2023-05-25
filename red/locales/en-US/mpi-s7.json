@@ -22,6 +22,7 @@
         },
         "error": {
             "noadapter": "No adapter available",
+            "adapter-not-connected": "Adapter not connected",
             "invalid-json-params": "Invalid JSON for bus parameters",
             "invalid-bus-speed": "Invalid bus speed selected"
         }
