@@ -9,7 +9,6 @@ const tools = require('../src/tools.js');
 module.exports = function (RED) {
     "use strict";
 
-    const { AdapterManager, BusSpeed, MpiAdapter } = require('@protocols/mpi-s7');
     const { EventEmitter } = require('events');
 
     // Discovery Endpoints
@@ -20,6 +19,22 @@ module.exports = function (RED) {
         } catch (e) {
             res.status(500).json(e && e.toString()).end();
         }
+    });
+
+    RED.httpAdmin.get('/__node-red-contrib-mpi-s7/available-nodes', RED.auth.needsPermission('mpi-s7.discover'), function (req, res) {
+        tools.getNodesForAdapter().then(nodes => {
+            res.json(nodes).end();
+        }).catch(e => {
+            res.status(500).json(e && e.toString()).end()
+        });
+    });
+
+    RED.httpAdmin.get('/__node-red-contrib-mpi-s7/available-nodes/:adapter', RED.auth.needsPermission('mpi-s7.discover'), function (req, res) {
+        tools.getNodesForAdapter(req.params.adapter).then(nodes => {
+            res.json(nodes).end();
+        }).catch(e => {
+            res.status(500).json(e && e.toString()).end()
+        });
     });
 
     /**
@@ -79,6 +94,14 @@ module.exports = function (RED) {
 
             return await adapter.createStream(addr);
         };
+
+        const mpiS7 = require('@protocols/mpi-s7');
+        if (!mpiS7) {
+            node.error('Missing "@protocols/mpi-s7" dependency, avaliable only on ST-One hardware. Please contact us at "st-one.io" for more information.');
+            return;
+        }
+
+        const { AdapterManager, BusSpeed, MpiAdapter } = mpiS7;
 
         if (config.busconfigmode === 'expert') {
             try {
