@@ -1,6 +1,6 @@
 {
     "name": "node-red-contrib-mpi-s7",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Node-RED nodes to communicate with Siemens MPI/PPI/DP adapters",
     "main": "index.js",
     "repository": {
@@ -29,6 +29,6 @@
     "author": "ST-One",
     "license": "GPL-3.0-or-later",
     "optionalDependencies": {
-        "@protocols/mpi-s7": "^1.0.0"
+        "@protocols/mpi-s7": "^1.1.0"
     }
 }
