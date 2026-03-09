@@ -169,6 +169,7 @@ module.exports = function (RED) {
             if (adapter) return;
 
             adapter = AdapterManager.getAdapter(wantedAdapterPath);
+            adapter.adapterConnectionTimeout = config.timeout;
 
             // skip if we for any reason couldn't get the adapter we want
             if (!adapter) return;
